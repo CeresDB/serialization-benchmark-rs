@@ -1,0 +1,16 @@
+// Example IDL file for our monster's schema.
+ 
+namespace FBDemo;
+ 
+table FBPet {
+  name:string;
+}
+ 
+table FBPerson {
+  name:string;
+  age:int;
+  pets:[FBPet];
+}
+ 
+ 
+root_type FBPerson;
