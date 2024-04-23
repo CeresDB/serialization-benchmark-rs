@@ -20,7 +20,6 @@ fn main() {
     let args: Args = Args::parse();
     let mut table = Table::new();
 
-    // 为表格添加标题行
     table.add_row(row![
         "name",
         "serialize time",
