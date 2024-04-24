@@ -37,7 +37,7 @@ Benchmark test, batch_size=5000000, result:
 | protobuf   | 1.065279(s)    | 1.5093864(s)     | 25.547447   |
 +------------+----------------+------------------+-------------+
 
-[]# ./serialization-benchmark-rs --unsafe
+[]# ./serialization-benchmark-rs --enable-unsafe
 Benchmark test, batch_size=1000000, result: 
 
 +------------+----------------+------------------+-------------+

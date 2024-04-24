@@ -10,7 +10,12 @@ use std::time::{Duration, Instant};
 pub type EnDecodeDuration = (Duration, Duration);
 
 pub trait Serializable {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool);
+    fn serialize_and_deserialize(&mut self, context: &mut TestContext);
+}
+
+pub struct TestContext {
+    pub duration: EnDecodeDuration,
+    pub enable_unsafe: bool,
 }
 
 pub struct RawPet {
@@ -60,16 +65,16 @@ impl FuryObject {
 }
 
 impl Serializable for FuryObject {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool) {
+    fn serialize_and_deserialize(&mut self, context: &mut TestContext) {
         // serialize
         let start_time = Instant::now();
         let bin = to_buffer(&self.data);
-        duration_trace.0 += start_time.elapsed();
+        context.duration.0 += start_time.elapsed();
 
         // deserialize
         let start_time = Instant::now();
         let _: FuryPerson = from_buffer(&bin).expect("should success");
-        duration_trace.1 += start_time.elapsed();
+        context.duration.1 += start_time.elapsed();
     }
 }
 
@@ -111,16 +116,16 @@ impl FlatBuffersObject<'_> {
 }
 
 impl Serializable for FlatBuffersObject<'_> {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool) {
+    fn serialize_and_deserialize(&mut self, context: &mut TestContext) {
         // serialize
         let start_time = Instant::now();
         self.builder.finish(self.data, None);
         let buf = self.builder.finished_data();
-        duration_trace.0 += start_time.elapsed();
+        context.duration.0 += start_time.elapsed();
 
         // deserialize
         let start_time = Instant::now();
-        if r#unsafe {
+        if context.enable_unsafe {
             unsafe {
                 flatbuffers::root_unchecked::<FBPerson>(buf);
             };
@@ -128,7 +133,7 @@ impl Serializable for FlatBuffersObject<'_> {
             let _ = flatbuffers::root::<FBPerson>(buf);
         }
 
-        duration_trace.1 += start_time.elapsed();
+        context.duration.1 += start_time.elapsed();
     }
 }
 
@@ -154,20 +159,20 @@ impl ProtobufObject {
 }
 
 impl Serializable for ProtobufObject {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool) {
+    fn serialize_and_deserialize(&mut self, context: &mut TestContext) {
         // serialize
         let start_time = Instant::now();
         let mut buf = Vec::new();
         self.data
             .encode(&mut buf)
             .expect("Failed to encode message");
-        duration_trace.0 += start_time.elapsed();
+        context.duration.0 += start_time.elapsed();
 
         // deserialize
         let start_time = Instant::now();
 
         let _ = PbPerson::decode(&*buf).expect("Message decode failed");
-        duration_trace.1 += start_time.elapsed();
+        context.duration.1 += start_time.elapsed();
     }
 }
 
