@@ -10,7 +10,7 @@ use std::time::{Duration, Instant};
 pub type EnDecodeDuration = (Duration, Duration);
 
 pub trait Serializable {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration);
+    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool);
 }
 
 pub struct RawPet {
@@ -60,7 +60,7 @@ impl FuryObject {
 }
 
 impl Serializable for FuryObject {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration) {
+    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool) {
         // serialize
         let start_time = Instant::now();
         let bin = to_buffer(&self.data);
@@ -111,7 +111,7 @@ impl FlatBuffersObject<'_> {
 }
 
 impl Serializable for FlatBuffersObject<'_> {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration) {
+    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool) {
         // serialize
         let start_time = Instant::now();
         self.builder.finish(self.data, None);
@@ -120,7 +120,14 @@ impl Serializable for FlatBuffersObject<'_> {
 
         // deserialize
         let start_time = Instant::now();
-        let _ = flatbuffers::root::<FBPerson>(buf).unwrap();
+        if r#unsafe {
+            unsafe {
+                flatbuffers::root_unchecked::<FBPerson>(buf);
+            };
+        } else {
+            let _ = flatbuffers::root::<FBPerson>(buf);
+        }
+
         duration_trace.1 += start_time.elapsed();
     }
 }
@@ -147,7 +154,7 @@ impl ProtobufObject {
 }
 
 impl Serializable for ProtobufObject {
-    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration) {
+    fn serialize_and_deserialize(&mut self, duration_trace: &mut EnDecodeDuration, r#unsafe: bool) {
         // serialize
         let start_time = Instant::now();
         let mut buf = Vec::new();
@@ -163,3 +170,4 @@ impl Serializable for ProtobufObject {
         duration_trace.1 += start_time.elapsed();
     }
 }
+

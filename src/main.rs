@@ -14,6 +14,9 @@ use sysinfo::{CpuRefreshKind, RefreshKind, System};
 struct Args {
     #[clap(default_value = "1000000", long, env)]
     batch_size: usize,
+
+    #[arg(long, env, help = "use unsafe feature within flatbuffer")]
+    r#unsafe: bool,
 }
 
 fn main() {
@@ -30,6 +33,7 @@ fn main() {
 
     println!("Benchmark test, batch_size={}, result: \n", args.batch_size);
     let n: usize = args.batch_size;
+    let r#unsafe = args.r#unsafe;
     let raw_person = RawPerson {
         name: "Mr' White".to_string(),
         age: 18,
@@ -53,7 +57,7 @@ fn main() {
         let mut duration_trace: EnDecodeDuration = (Duration::new(0, 0), Duration::new(0, 0));
         flatbuffer_objects
             .iter_mut()
-            .for_each(|x| x.serialize_and_deserialize(&mut duration_trace));
+            .for_each(|x| x.serialize_and_deserialize(&mut duration_trace, r#unsafe));
 
         cpu_trace.refresh_cpu();
         table.add_row(Row::new(vec![
@@ -80,7 +84,7 @@ fn main() {
         let mut duration_trace: EnDecodeDuration = (Duration::new(0, 0), Duration::new(0, 0));
         fury_objects
             .iter_mut()
-            .for_each(|x| x.serialize_and_deserialize(&mut duration_trace));
+            .for_each(|x| x.serialize_and_deserialize(&mut duration_trace, r#unsafe));
         cpu_trace.refresh_cpu();
         table.add_row(Row::new(vec![
             Cell::new("fury"),
@@ -106,7 +110,7 @@ fn main() {
         let mut duration_trace: EnDecodeDuration = (Duration::new(0, 0), Duration::new(0, 0));
         protobuf_objects
             .iter_mut()
-            .for_each(|x| x.serialize_and_deserialize(&mut duration_trace));
+            .for_each(|x| x.serialize_and_deserialize(&mut duration_trace, r#unsafe));
         cpu_trace.refresh_cpu();
         table.add_row(Row::new(vec![
             Cell::new("protobuf"),
@@ -125,3 +129,4 @@ fn main() {
 
     table.printstd();
 }
+
