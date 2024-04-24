@@ -1,4 +1,5 @@
 extern crate flatbuffers;
+#[rustfmt::skip]
 mod fbperson_generated;
 mod pbperson;
 use fbperson_generated::fbdemo::{FBPerson, FBPersonArgs, FBPet, FBPetArgs};
@@ -175,4 +176,3 @@ impl Serializable for ProtobufObject {
         context.duration.1 += start_time.elapsed();
     }
 }
-

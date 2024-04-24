@@ -1,10 +1,6 @@
 # Serialization-benchmark-rs
 Benchmark for serialization in Rust, https://github.com/apache/incubator-horaedb/issues/1515.
 
-# Related projects
-- https://github.com/CeresDB/hash-benchmark-rs
-
-
 # Usage
 ```sh
 []# serialization-benchmark-rs --help
@@ -17,8 +13,8 @@ Options:
   -V, --version                  Print version
 
 
-[]# ./serialization-benchmark-rs 
-Benchmark test, batch_size=1000000, result: 
+[]# ./serialization-benchmark-rs
+Benchmark test, batch_size=1000000, result:
 
 +------------+----------------+------------------+-------------+
 | name       | serialize time | deserialize time | cpu_utility |
@@ -28,7 +24,7 @@ Benchmark test, batch_size=1000000, result:
 +------------+----------------+------------------+-------------+
 
 []# ./serialization-benchmark-rs --batch-size 5000000
-Benchmark test, batch_size=5000000, result: 
+Benchmark test, batch_size=5000000, result:
 
 +------------+----------------+------------------+-------------+
 | name       | serialize time | deserialize time | cpu_utility |
@@ -38,7 +34,7 @@ Benchmark test, batch_size=5000000, result:
 +------------+----------------+------------------+-------------+
 
 []# ./serialization-benchmark-rs --enable-unsafe
-Benchmark test, batch_size=1000000, result: 
+Benchmark test, batch_size=1000000, result:
 
 +------------+----------------+------------------+-------------+
 | name       | serialize time | deserialize time | cpu_utility |
@@ -48,3 +44,6 @@ Benchmark test, batch_size=1000000, result:
 +------------+----------------+------------------+-------------+
 ```
 
+
+# Related projects
+- https://github.com/CeresDB/hash-benchmark-rs
