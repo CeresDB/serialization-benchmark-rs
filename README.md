@@ -1,4 +1,7 @@
 # Serialization-benchmark-rs
+
+[![CI](https://github.com/CeresDB/serialization-benchmark-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/CeresDB/serialization-benchmark-rs/actions/workflows/ci.yml)
+
 Benchmark for serialization in Rust, https://github.com/apache/incubator-horaedb/issues/1515.
 
 # Usage

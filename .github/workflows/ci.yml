@@ -34,6 +34,16 @@ jobs:
           components: clippy, rustfmt
       - run:
           sudo apt install -y protobuf-compiler
+      - name: Cache Crates
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./target
+            ~/.cargo
+          key: debug-${{ runner.os }}-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            debug-${{ runner.os }}-${{ hashFiles('rust-toolchain.toml') }}-
+            debug-${{ runner.os }}-
       - name: Run Style Check
         run: |
           make ci
