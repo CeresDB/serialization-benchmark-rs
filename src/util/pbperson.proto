@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pbperson;
+
+message PBPet {
+    string name = 1;
+}
+
+// 简单的消息定义。
+message PBPerson {
+    string name = 1;
+    int32 age = 2;
+    repeated PBPet pets = 3;
+}
