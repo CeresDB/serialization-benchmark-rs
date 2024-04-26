@@ -1,0 +1,7 @@
+// message.fbs
+namespace MyGame.Sample;
+
+table Monster {
+  id: int;
+  name: string;
+}

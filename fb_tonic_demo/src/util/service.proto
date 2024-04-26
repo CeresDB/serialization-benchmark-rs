@@ -1,0 +1,16 @@
+// service.proto
+syntax = "proto3";
+
+package my_game;
+
+service MonsterService {
+  rpc GetMonster (GetMonsterRequest) returns (MonsterResponse);
+}
+
+message GetMonsterRequest {
+  int32 id = 1;
+}
+
+message MonsterResponse {
+  bytes monster_data = 1;
+}
