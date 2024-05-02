@@ -85,11 +85,9 @@ pub mod greeter_client {
         }
         pub async fn say_hello(
             &mut self,
-            request: impl tonic::IntoRequest<
-                crate::util::common::FlatBuffersObject<'static>,
-            >,
+            request: impl tonic::IntoRequest<crate::util::common::FlatBufferBytes>,
         ) -> std::result::Result<
-            tonic::Response<crate::util::common::FlatBuffersObject<'static>>,
+            tonic::Response<crate::util::common::FlatBufferBytes>,
             tonic::Status,
         > {
             self.inner
@@ -121,9 +119,9 @@ pub mod greeter_server {
     pub trait Greeter: Send + Sync + 'static {
         async fn say_hello(
             &self,
-            request: tonic::Request<crate::util::common::FlatBuffersObject<'static>>,
+            request: tonic::Request<crate::util::common::FlatBufferBytes>,
         ) -> std::result::Result<
-            tonic::Response<crate::util::common::FlatBuffersObject<'static>>,
+            tonic::Response<crate::util::common::FlatBufferBytes>,
             tonic::Status,
         >;
     }
@@ -211,19 +209,16 @@ pub mod greeter_server {
                     struct SayHelloSvc<T: Greeter>(pub Arc<T>);
                     impl<
                         T: Greeter,
-                    > tonic::server::UnaryService<
-                        crate::util::common::FlatBuffersObject<'static>,
-                    > for SayHelloSvc<T> {
-                        type Response = crate::util::common::FlatBuffersObject<'static>;
+                    > tonic::server::UnaryService<crate::util::common::FlatBufferBytes>
+                    for SayHelloSvc<T> {
+                        type Response = crate::util::common::FlatBufferBytes;
                         type Future = BoxFuture<
                             tonic::Response<Self::Response>,
                             tonic::Status,
                         >;
                         fn call(
                             &mut self,
-                            request: tonic::Request<
-                                crate::util::common::FlatBuffersObject<'static>,
-                            >,
+                            request: tonic::Request<crate::util::common::FlatBufferBytes>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {

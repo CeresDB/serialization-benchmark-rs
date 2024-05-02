@@ -1,10 +1,6 @@
 use std::io::Result;
 
 fn main() -> Result<()> {
-    // tonic_build::configure()
-    //     .out_dir("src/util")
-    //     .compile(&["src/util/service.proto"], &["src/util"])?;
-    // Ok(())
     let greeter_service = tonic_build::manual::Service::builder()
         .name("Greeter")
         .package("fb.helloworld")
@@ -12,8 +8,8 @@ fn main() -> Result<()> {
             tonic_build::manual::Method::builder()
                 .name("say_hello")
                 .route_name("SayHello")
-                .input_type("crate::util::common::FlatBuffersObject<'static>")
-                .output_type("crate::util::common::FlatBuffersObject<'static>")
+                .input_type("crate::util::common::FlatBufferBytes")
+                .output_type("crate::util::common::FlatBufferBytes")
                 .codec_path("crate::util::common::FlatBufferCodec")
                 .build(),
         )

@@ -1,0 +1,10 @@
+// Example IDL file for our monster's schema.
+ 
+namespace FBDemo;
+ 
+table Greetings {
+  name:string;
+  words:string;
+}
+ 
+root_type Greetings;

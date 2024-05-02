@@ -1,11 +1,2 @@
-pub mod message_generated;
-pub mod my_game;
-pub use message_generated::my_game::sample::Monster;
-pub use message_generated::my_game::sample::MonsterArgs;
-pub use my_game::monster_service_client::MonsterServiceClient;
-pub use my_game::monster_service_server;
-pub use my_game::monster_service_server::MonsterServiceServer;
-pub use my_game::GetMonsterRequest;
-pub use my_game::MonsterResponse;
 pub mod common;
-pub mod fbperson_generated;
+pub mod fbgreeting_generated;
