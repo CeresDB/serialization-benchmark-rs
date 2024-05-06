@@ -3,9 +3,11 @@ use std::path::Path;
 
 fn main() -> Result<()> {
     if let Ok(flatc_bin) = std::env::var("FLATC") {
-        std::env::set_var("PATH", std::env::var("PATH").unwrap() + format!(":{}", flatc_bin.as_str()).as_str());
-    }
-    else {
+        std::env::set_var(
+            "PATH",
+            std::env::var("PATH").unwrap() + format!(":{}", flatc_bin.as_str()).as_str(),
+        );
+    } else {
         println!("FLATC enviroment variable not found!");
     }
 

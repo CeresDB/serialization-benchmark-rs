@@ -27,13 +27,14 @@ impl FlatBufferBytes {
     ) -> Self {
         builder.finish(root_offset, None);
         let (mut data, head) = builder.collapse();
-        Self (data.drain(head..).collect())
+        Self(data.drain(head..).collect())
     }
 
     pub fn deserialize<'buf, T: flatbuffers::Follow<'buf> + flatbuffers::Verifiable + 'buf>(
         &'buf self,
     ) -> Result<T::Inner, Box<dyn std::error::Error>> {
-        flatbuffers::root::<T>(self.0.as_slice()).map_err(|x| Box::new(x) as Box<dyn std::error::Error>)
+        flatbuffers::root::<T>(self.0.as_slice())
+            .map_err(|x| Box::new(x) as Box<dyn std::error::Error>)
     }
 }
 
