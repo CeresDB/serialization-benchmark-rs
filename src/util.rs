@@ -1,4 +1,5 @@
 extern crate flatbuffers;
+#[rustfmt::skip]
 mod fbperson_generated;
 mod pbperson;
 use fbperson_generated::fbdemo::{FBPerson, FBPersonArgs, FBPet, FBPetArgs};

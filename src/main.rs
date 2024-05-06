@@ -14,10 +14,10 @@ use sysinfo::{CpuRefreshKind, RefreshKind, System};
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    #[clap(default_value = "1000000", long, env)]
+    #[clap(long, short('b'), default_value = "1000000")]
     batch_size: usize,
 
-    #[arg(long, env, help = "use unsafe feature within flatbuffer")]
+    #[arg(long, short('u'), help = "use unsafe feature within flatbuffer")]
     enable_unsafe: bool,
 }
 
