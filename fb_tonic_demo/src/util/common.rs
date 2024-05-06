@@ -14,18 +14,11 @@ use tonic::{
 // items been encoded or decoded shall not have any non static references.
 // However flatbuffer related types always have a 'fbb lifetime bound, I found no way to implement
 // something like serde do.
-pub struct FlatBufferBytes {
-    data: Vec<u8>,
-    head: usize,
-}
+pub struct FlatBufferBytes(Vec<u8>);
 
 impl FlatBufferBytes {
-    pub fn new(data: Vec<u8>, head: usize) -> Self {
-        Self { data, head }
-    }
-
-    pub fn valid_slice(&self) -> &[u8] {
-        &(self.data[self.head..])
+    pub fn new(data: Vec<u8>) -> Self {
+        Self(data)
     }
 
     pub fn serialize<'buf, T: flatbuffers::Follow<'buf> + 'buf>(
@@ -33,15 +26,14 @@ impl FlatBufferBytes {
         root_offset: flatbuffers::WIPOffset<T>,
     ) -> Self {
         builder.finish(root_offset, None);
-        let (data, head) = builder.collapse();
-        Self { data, head }
+        let (mut data, head) = builder.collapse();
+        Self (data.drain(head..).collect())
     }
 
     pub fn deserialize<'buf, T: flatbuffers::Follow<'buf> + flatbuffers::Verifiable + 'buf>(
         &'buf self,
     ) -> Result<T::Inner, Box<dyn std::error::Error>> {
-        let data = self.valid_slice();
-        flatbuffers::root::<T>(data).map_err(|x| Box::new(x) as Box<dyn std::error::Error>)
+        flatbuffers::root::<T>(self.0.as_slice()).map_err(|x| Box::new(x) as Box<dyn std::error::Error>)
     }
 }
 
@@ -53,7 +45,7 @@ impl Encoder for FlatBufferEncoder {
     type Error = Status;
 
     fn encode(&mut self, item: Self::Item, buf: &mut EncodeBuf<'_>) -> Result<(), Self::Error> {
-        buf.put_slice(item.valid_slice());
+        buf.put_slice(item.0.as_slice());
         Ok(())
     }
 }
@@ -73,7 +65,7 @@ impl Decoder for FlatBufferDecoder {
         buf.reader()
             .read_to_end(&mut data)
             .map_err(|e| Status::internal(e.to_string()))?;
-        let item = FlatBufferBytes::new(data, 0);
+        let item = FlatBufferBytes::new(data);
         Ok(Some(item))
     }
 }
