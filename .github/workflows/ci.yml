@@ -33,7 +33,9 @@ jobs:
         with:
           components: clippy, rustfmt
       - run:
+          sudo apt update
           sudo apt install -y protobuf-compiler
+          sudo apt install -y flatbuffers-compiler
       - name: Cache Crates
         uses: actions/cache@v3
         with:
