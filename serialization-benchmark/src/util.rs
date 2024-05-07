@@ -176,4 +176,3 @@ impl Serializable for ProtobufObject {
         context.duration.1 += start_time.elapsed();
     }
 }
-
