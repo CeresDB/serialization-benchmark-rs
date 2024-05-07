@@ -7,7 +7,12 @@ edition = "2021"
 resolver = "2"
 # In alphabetical order
 members = [
+    "serialization-benchmark",
     "fb_tonic_demo",
+]
+
+default-members = [
+    "serialization-benchmark"
 ]
 
 [workspace.dependencies]
