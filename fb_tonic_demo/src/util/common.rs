@@ -9,11 +9,6 @@ use tonic::{
     Status,
 };
 
-// TODO: Any better solutions to manage the flatbuffer objects?
-// As the associated type Encode / Decode of Trait Codec has a 'static lifetime bound which means
-// items been encoded or decoded shall not have any non static references.
-// However flatbuffer related types always have a 'fbb lifetime bound, I found no way to implement
-// something like serde do.
 pub struct FlatBufferBytes(Vec<u8>);
 
 impl FlatBufferBytes {
