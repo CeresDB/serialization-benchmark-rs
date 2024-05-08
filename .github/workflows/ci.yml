@@ -32,8 +32,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
-      - run:
+      - run: |
+          sudo apt update
           sudo apt install -y protobuf-compiler
+          sudo sh compile-flatc.sh
       - name: Cache Crates
         uses: actions/cache@v3
         with:

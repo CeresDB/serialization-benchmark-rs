@@ -137,6 +137,5 @@ fn main() {
             ),
         ]));
     }
-
     table.printstd();
 }
