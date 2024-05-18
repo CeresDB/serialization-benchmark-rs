@@ -9,8 +9,14 @@ pub mod hello_world {
 }
 use hello_world::greeter_client::GreeterClient;
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub mod pb_hello_world {
+    tonic::include_proto!("helloworld");
+}
+
+use pb_hello_world::greeter_client::GreeterClient as PBGreeterClient;
+use pb_hello_world::HelloRequest;
+
+async fn fb_hello() -> Result<(), Box<dyn std::error::Error>> {
     let mut client = GreeterClient::connect("http://[::1]:50051").await?;
 
     let mut builder: flatbuffers::FlatBufferBuilder<'_> =
@@ -37,6 +43,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             greetings.words().unwrap()
         );
     }
+    Ok(())
+}
 
+async fn pb_hello() -> Result<(), Box<dyn std::error::Error>> {
+    let mut client = PBGreeterClient::connect("http://[::1]:50051").await?;
+
+    let request = tonic::Request::new(HelloRequest {
+        name: "Tonic".into(),
+    });
+
+    let response = client.say_hello(request).await?;
+
+    println!("RESPONSE={:?}", response);
+    Ok(())
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    fb_hello().await?;
+    pb_hello().await?;
     Ok(())
 }

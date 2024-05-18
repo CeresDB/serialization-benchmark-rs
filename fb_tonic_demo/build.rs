@@ -36,5 +36,9 @@ fn main() -> Result<()> {
     tonic_build::manual::Builder::new()
         .out_dir("src/util")
         .compile(&[greeter_service]);
+
+    tonic_build::configure()
+        .compile(&["src/util/hello.proto"], &["proto"])
+        .unwrap();
     Ok(())
 }
