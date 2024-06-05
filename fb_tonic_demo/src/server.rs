@@ -11,6 +11,30 @@ pub mod hello_world {
 }
 use hello_world::greeter_server::{Greeter, GreeterServer};
 
+pub mod pb_hello_world {
+    tonic::include_proto!("helloworld");
+}
+use pb_hello_world::greeter_server::{Greeter as PBGreeter, GreeterServer as PBGreeterServer};
+use pb_hello_world::{HelloReply, HelloRequest};
+
+#[derive(Default)]
+pub struct PBMyGreeter {}
+
+#[tonic::async_trait]
+impl PBGreeter for PBMyGreeter {
+    async fn say_hello(
+        &self,
+        request: Request<HelloRequest>,
+    ) -> Result<Response<HelloReply>, Status> {
+        println!("Got a request from {:?}", request.remote_addr());
+
+        let reply = pb_hello_world::HelloReply {
+            message: format!("Hello {}!", request.into_inner().name),
+        };
+        Ok(Response::new(reply))
+    }
+}
+
 #[derive(Default)]
 pub struct MyGreeter {}
 
@@ -49,11 +73,13 @@ impl Greeter for MyGreeter {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse().unwrap();
     let greeter = MyGreeter::default();
+    let pb_greeter = PBMyGreeter::default();
 
     println!("GreeterServer listening on {}", addr);
 
     Server::builder()
         .add_service(GreeterServer::new(greeter))
+        .add_service(PBGreeterServer::new(pb_greeter))
         .serve(addr)
         .await?;
 
